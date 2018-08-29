@@ -10,11 +10,12 @@ This is the last project of Udacity Front-End Nanodegree Scholarship Course.
 
 Clone or download all files from [HERE](https://github.com/AimeeParlow/FEND-Project-8)
 
-Use [node.js](https://nodejs.org/en/) to install this project with
+Use [node.js](https://nodejs.org/en/) to install this project with;
+
 ```
 npm install
 ```
-then
+After install is done, input;
 ```
 npm start
 ```
@@ -25,21 +26,22 @@ The App would be shown in http://localhost:8000 in your browser.
 ## Using API
 
 Google Maps API
+
 FourSquare API
 
 ## Status of Service Worker
 
-Working of the service worker in production mode is confirmed.
+The Service Worker is only available in production mode.
 
 If you would like to use the App in production mode, run
 ```
 npm run build
 ```
-Once the build folder is ready to be deployed, input
+then, once the build folder is ready to be deployed, input
 ```
 serve -s build
 ```
-Then the App would be displayed in http://localhost:5000 in your browser.
+The App would be displayed in http://localhost:5000 in your browser.
 
 
 ## Special thanks 

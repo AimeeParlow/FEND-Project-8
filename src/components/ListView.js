@@ -33,7 +33,7 @@ class ListView extends Component {
 						return (
 							<li className="rest-name" key={venues.venue.id} role="presentation" tabIndex="0">
 								<div onClick={() =>
-									this.props.initMap(venues.venue.name)}	//click in the list and call updated initMap								
+									this.props.updateMap(venues.venue.name)} //click in the list and call updated initMap								
 								>
 								{venues.venue.name}
 								</div>

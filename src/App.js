@@ -6,7 +6,8 @@ import ListView from './components/ListView';
 class App extends Component {
 	state = {
 		venues: [], //restaurants' info
-		query: '' //keyword for searching on API
+		query: '' , //keyword for searching on API
+		markerList: [] //marker
 		}
 
 	componentDidMount() {
@@ -39,73 +40,102 @@ class App extends Component {
 			})
 	}
 	
+	//marker animation
+	toggleBounce = (marker) => { 
+		if (marker.getAnimation() !== null) {
+		  marker.setAnimation(null);
+		} else {
+		  marker.setAnimation(window.google.maps.Animation.BOUNCE);
+		}
+	}
+	
+	toggleBounceStop = (marker) => {
+		marker.setAnimation(null);
+	}
+	
 	initMap = (value) => {
         
 		//create and display default map
 		let map = new window.google.maps.Map(document.getElementById('map'), {
-          center: {lat: 48.853089, lng: 2.350460 },
-          zoom: 13
+			center: {lat: 48.853089, lng: 2.350460 },
+			zoom: 13
         })
 		
 		//create an info window
-		let infowindow = new window.google.maps.InfoWindow()
-
+		let infowindow = new window.google.maps.InfoWindow()	
+		let markerListTemp =[]	
 			
 		//display markers on the map
-		this.state.venues.map(currentVenues => {
+		this.state.venues.map(currentVenues => {	
 			
-			//contents in the info window
-			let contentString = 
-				`<div className="info-name">${currentVenues.venue.name}</div>` +
-				`<div className="info-address">Address: ${currentVenues.venue.location.address}, 
-					${currentVenues.venue.location.city}</div>` + 
-				`<div id="foursquare">Data provided by Foursquare</div>`
-			
-			//display a marker at proper location of each restaurant on the map
-			let marker = new window.google.maps.Marker({
+		//contents in the info window
+		let contentString = 
+			`<div className="info-name">${currentVenues.venue.name}</div>` +
+			`<div className="info-address">Address: ${currentVenues.venue.location.address}, 
+				${currentVenues.venue.location.city}</div>` + 
+			`<div id="foursquare">Data provided by Foursquare</div>`
+		
+		//display a marker at proper location of each restaurant on the map
+		let marker = new window.google.maps.Marker({
+			infowindow : infowindow,		
+			contentString : contentString,	
 			position: {lat: currentVenues.venue.location.lat, lng: currentVenues.venue.location.lng},
 			animation: window.google.maps.Animation.DROP,
 			map: map,
 			icon: '',
 			title: currentVenues.venue.name //show the name on-cursor
-			});
-			marker.addListener('click', toggleBounce);
-		
-			function toggleBounce() {
+		});
+		marker.addListener('click', toggleBounce);
+			
+		function toggleBounce() {
 			if (marker.getAnimation() !== null) {
 			  marker.setAnimation(null);
 			} else {
 			  marker.setAnimation(window.google.maps.Animation.BOUNCE);
 			}
-		  }
-		
-		
-		
-		
+		}
 
-			//click on a marker
-		    marker.addListener('click', function() {
+		//click on a marker
+		marker.addListener('click', function() {
 
-				//create the content
-				infowindow.setContent(contentString)
-				
-				//open info window
-				infowindow.open(map, marker)
-				
-				toggleBounce(marker)
-	  
-
+			//create the content
+			infowindow.setContent(contentString)
 			
-				})		
+			//open info window
+			infowindow.open(map, marker)
 			
+			//call marker animation function
+			this.toggleBounce(marker)
+		
+		})		
+		
+		markerListTemp.push(marker)
+					
+		//if a restaurant in the list-view is clicked, display its marker 
+		if(value !== '' && currentVenues.venue.name === value){
+			infowindow.setContent(contentString)
+			infowindow.open(map, marker)
+			toggleBounce(marker)
+		}			
+			this.setState({markerList:markerListTemp})
 			
-			
+			return {}
+		})
+	}
+	
+	updateMap = (value) => {
+		
+		//display markers on the map
+		this.state.markerList.map(marker => {					
+	
 			//if a restaurant in the list-view is clicked, display its marker 
-			if(value !== '' && currentVenues.venue.name === value){
-
-				infowindow.setContent(contentString)
-				infowindow.open(map, marker)
-				toggleBounce(marker)
+			if(value !== '' && marker.title === value){
+				marker.infowindow.setContent(marker.contentString)
+				marker.infowindow.open(marker.map, marker)
+				this.toggleBounce(marker)		
+			}
+			else{
+				this.toggleBounceStop(marker)
 			}
 			return {}
 		})
@@ -128,6 +158,7 @@ class App extends Component {
 						restaurantList = {this.state.venues}
 						getVenues = {this.getVenues}
 						initMap = {this.initMap}
+						updateMap = {this.updateMap}
 					/>
 					<div id="menu" className="menu" role="menu">
 						<button className="button" tabIndex="0" onClick={this.clickAction}>☰</button>
