@@ -1,3 +1,4 @@
+
 import React, { Component } from 'react';
 import './App.css';
 import axios from 'axios';
@@ -105,7 +106,7 @@ class App extends Component {
 			infowindow.open(map, marker)
 			
 			//call marker animation function
-			this.toggleBounce(marker)
+			toggleBounce(marker)
 		
 		})		
 		
