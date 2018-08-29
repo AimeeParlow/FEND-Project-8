@@ -68,8 +68,11 @@ html, body {
 	margin: auto;
 	background-color: yellow;
 	width: 100%;
-	color: black;
-	
+	color: black;	
+}
+
+#foursquare {
+	font-size: 8px;
 }
 
 /*

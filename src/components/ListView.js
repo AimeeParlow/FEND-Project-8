@@ -18,7 +18,7 @@ class ListView extends Component {
 		<div id="list-view" className="list-view menu-close">		
 			<select className="select-box" role="menu" aria-label="filter the list by food genre" tabIndex="0" onChange={(event) =>
 				this.updateSelectValue(event.target.value)}>
-				<option value="title" select='false' tabIndex="-1">--Choose the genre--</option>
+				<option value="restaurant-" select='false' tabIndex="-1">--Choose the genre--</option>
 				<option value="japanese">Japanese</option>
 				<option value="french">French</option> 
 				<option value="indian">Indian</option>

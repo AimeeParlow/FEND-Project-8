@@ -7,7 +7,7 @@ class App extends Component {
 	state = {
 		venues: [], //restaurants' info
 		query: '' //keyword for searching on API
-	}
+		}
 
 	componentDidMount() {
 		this.getVenues()
@@ -44,7 +44,7 @@ class App extends Component {
 		//create and display default map
 		let map = new window.google.maps.Map(document.getElementById('map'), {
           center: {lat: 48.853089, lng: 2.350460 },
-          zoom: 12
+          zoom: 13
         })
 		
 		//create an info window
@@ -53,34 +53,59 @@ class App extends Component {
 			
 		//display markers on the map
 		this.state.venues.map(currentVenues => {
-		
+			
 			//contents in the info window
 			let contentString = 
 				`<div className="info-name">${currentVenues.venue.name}</div>` +
 				`<div className="info-address">Address: ${currentVenues.venue.location.address}, 
-					${currentVenues.venue.location.city}</div>`
+					${currentVenues.venue.location.city}</div>` + 
+				`<div id="foursquare">Data provided by Foursquare</div>`
 			
 			//display a marker at proper location of each restaurant on the map
 			let marker = new window.google.maps.Marker({
 			position: {lat: currentVenues.venue.location.lat, lng: currentVenues.venue.location.lng},
+			animation: window.google.maps.Animation.DROP,
 			map: map,
+			icon: '',
 			title: currentVenues.venue.name //show the name on-cursor
-			})
-			
+			});
+			marker.addListener('click', toggleBounce);
+		
+			function toggleBounce() {
+			if (marker.getAnimation() !== null) {
+			  marker.setAnimation(null);
+			} else {
+			  marker.setAnimation(window.google.maps.Animation.BOUNCE);
+			}
+		  }
+		
+		
+		
+		
+
 			//click on a marker
 		    marker.addListener('click', function() {
-				
+
 				//create the content
 				infowindow.setContent(contentString)
 				
 				//open info window
 				infowindow.open(map, marker)
-			})
+				
+				toggleBounce(marker)
+	  
+
+			
+				})		
+			
+			
 			
 			//if a restaurant in the list-view is clicked, display its marker 
 			if(value !== '' && currentVenues.venue.name === value){
+
 				infowindow.setContent(contentString)
 				infowindow.open(map, marker)
+				toggleBounce(marker)
 			}
 			return {}
 		})
